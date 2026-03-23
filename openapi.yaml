@@ -1,0 +1,2819 @@
+openapi: 3.0.3
+info:
+  title: Supabase Application API
+  description: >
+    Complete API documentation for all tables in the Supabase project.
+    Uses PostgREST conventions. All endpoints require authentication via
+    apikey header and/or Bearer token.
+  version: 1.0.0
+
+servers:
+  - url: https://pfihaypdopddrpibmbme.supabase.co/rest/v1
+    description: Supabase REST API (Acesso às Tabelas do Agregly)
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
+
+tags:
+  - name: Profiles
+  - name: Chats
+  - name: Messages
+  - name: Conversations
+  - name: Posts
+  - name: SocialPosts
+  - name: PublishedPosts
+  - name: ScheduledPosts
+  - name: GeneratedVideos
+  - name: LaunchVideos
+  - name: Referrals
+  - name: Invoices
+  - name: UserSubscriptions
+  - name: SubscriptionCancellations
+  - name: SupportTickets
+  - name: VideoWaitlist
+  - name: CheckoutSessions
+  - name: LeadsPlanPlus
+  - name: IntegrationTokens
+  - name: ApiKeys
+  - name: ApiUsageLogs
+  - name: ApiMonthlyUsage
+  - name: WhatsappCampaigns
+  - name: InstagramCampaigns
+  - name: WebhookLogs
+  - name: CanvaDesigns
+  - name: CanvaOauthSessions
+  - name: Secrets
+
+paths:
+
+  # ─────────────────────────────────────────
+  # PROFILES
+  # ─────────────────────────────────────────
+  /profiles:
+    get:
+      summary: List profiles
+      tags: [Profiles]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+              example:
+                - id: "550e8400-e29b-41d4-a716-446655440000"
+                  user_id: "550e8400-e29b-41d4-a716-446655440001"
+                  email: "user@example.com"
+                  plan_type: "pro"
+                  role: "user"
+                  created_at: "2024-01-15T10:30:00Z"
+                  free_messages_used: 5
+                  subscription_plan: "pro"
+                  is_superadmin: false
+                  updated_at: "2024-03-01T08:00:00Z"
+                  referral_code: "REF123"
+                  extra_messages_balance: 10
+                  referred_by: null
+                  subscription_status: "active"
+                  cancellation_date: null
+                  access_until: "2025-01-15T00:00:00Z"
+                  user_type: "standard"
+                  niche: "marketing"
+                  plan: "monthly"
+                  monthly_videos_generated: 3
+                  monthly_videos_remaining: 7
+                  selected_avatar_id: "avatar_001"
+                  referral_count: 2
+                  bonus_messages: 0
+                  meta_connected_at: null
+                  linkedin_name: "John Doe"
+                  linkedin_email: "john@example.com"
+                  content_profiles: null
+                  active_content_profile: null
+                  subscription_tier: "pro"
+                  daily_message_reset: "2024-03-22T00:00:00Z"
+                  last_message_reset: "2024-03-21T00:00:00Z"
+                  most_used_feature: "chat"
+                  professional_niche: "SaaS"
+                  meta_access_token: null
+                  instagram_username: "johndoe"
+                  meta_token_expires_at: null
+                  whatsapp_business_phone: null
+                  meta_connection_status: "disconnected"
+                  has_seen_onboarding: true
+                  subscription_expires_at: "2025-01-15T00:00:00Z"
+                  is_premium: true
+                  premium_granted_at: null
+                  linkedin_access_token: null
+                  linkedin_user_id: null
+                  linkedin_connected_at: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create a profile
+      tags: [Profiles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileCreate'
+            example:
+              user_id: "550e8400-e29b-41d4-a716-446655440001"
+              email: "newuser@example.com"
+              plan_type: "free"
+              role: "user"
+              niche: "education"
+              plan: "monthly"
+      responses:
+        '201':
+          description: Profile created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ─────────────────────────────────────────
+  # CHATS
+  # ─────────────────────────────────────────
+  /chats:
+    get:
+      summary: List chats
+      tags: [Chats]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of chats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+              example:
+                - id: "chat-uuid-001"
+                  title: "Marketing Strategy Session"
+                  created_at: "2024-03-01T10:00:00Z"
+                  user_id: "user-uuid-001"
+                  model_type: "claude"
+                  is_pinned: false
+    post:
+      summary: Create a chat
+      tags: [Chats]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCreate'
+            example:
+              title: "New Chat Session"
+              user_id: "user-uuid-001"
+              model_type: "claude"
+              is_pinned: false
+      responses:
+        '201':
+          description: Chat created
+
+  # ─────────────────────────────────────────
+  # MESSAGES
+  # ─────────────────────────────────────────
+  /messages:
+    get:
+      summary: List messages
+      tags: [Messages]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+              example:
+                - id: "msg-uuid-001"
+                  chat_id: "chat-uuid-001"
+                  role: "user"
+                  content: "Hello, can you help me with marketing?"
+                  created_at: "2024-03-01T10:05:00Z"
+                  user_id: "user-uuid-001"
+                  model_type: "claude"
+                  conversation_id: "conv-uuid-001"
+                  file_url: null
+                  file_type: null
+                  file_name: null
+                  analysis_result: null
+                  analysis_model: null
+                  feature_type: "chat"
+    post:
+      summary: Create a message
+      tags: [Messages]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+            example:
+              chat_id: "chat-uuid-001"
+              role: "user"
+              content: "Generate a content strategy for my brand."
+              user_id: "user-uuid-001"
+              model_type: "claude"
+              feature_type: "chat"
+      responses:
+        '201':
+          description: Message created
+
+  # ─────────────────────────────────────────
+  # CONVERSATIONS
+  # ─────────────────────────────────────────
+  /conversations:
+    get:
+      summary: List conversations
+      tags: [Conversations]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conversation'
+              example:
+                - id: "conv-uuid-001"
+                  user_id: "user-uuid-001"
+                  title: "Brand Strategy"
+                  created_at: "2024-03-01T09:00:00Z"
+                  is_pinned: false
+    post:
+      summary: Create a conversation
+      tags: [Conversations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversationCreate'
+            example:
+              user_id: "user-uuid-001"
+              title: "New Conversation"
+              is_pinned: false
+      responses:
+        '201':
+          description: Conversation created
+
+  # ─────────────────────────────────────────
+  # POSTS
+  # ─────────────────────────────────────────
+  /posts:
+    get:
+      summary: List posts
+      tags: [Posts]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+                - id: "post-uuid-001"
+                  user_id: "user-uuid-001"
+                  title: "10 Tips for Better Marketing"
+                  content: "Here are the top 10 tips..."
+                  platform: "linkedin"
+                  views: 1500
+                  likes: 87
+                  engagement: 120
+                  shares: 33
+                  created_at: "2024-03-10T12:00:00Z"
+                  updated_at: "2024-03-10T12:00:00Z"
+    post:
+      summary: Create a post
+      tags: [Posts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreate'
+            example:
+              user_id: "user-uuid-001"
+              title: "New Post Title"
+              content: "Post content here..."
+              platform: "instagram"
+      responses:
+        '201':
+          description: Post created
+
+  # ─────────────────────────────────────────
+  # SOCIAL POSTS
+  # ─────────────────────────────────────────
+  /social_posts:
+    get:
+      summary: List social posts
+      tags: [SocialPosts]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of social posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SocialPost'
+              example:
+                - id: "sp-uuid-001"
+                  user_id: "user-uuid-001"
+                  platform: "instagram"
+                  post_id: "ig-post-123"
+                  content: "Check out our new product!"
+                  image_url: "https://example.com/image.jpg"
+                  status: "published"
+                  published_at: "2024-03-15T14:00:00Z"
+                  created_at: "2024-03-15T13:00:00Z"
+                  likes: 230
+                  engagement: 45
+                  shares: 12
+    post:
+      summary: Create a social post
+      tags: [SocialPosts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialPostCreate'
+            example:
+              user_id: "user-uuid-001"
+              platform: "instagram"
+              content: "New post content"
+              image_url: "https://example.com/img.jpg"
+              status: "draft"
+      responses:
+        '201':
+          description: Social post created
+
+  # ─────────────────────────────────────────
+  # PUBLISHED POSTS
+  # ─────────────────────────────────────────
+  /published_posts:
+    get:
+      summary: List published posts
+      tags: [PublishedPosts]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of published posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublishedPost'
+              example:
+                - id: "pp-uuid-001"
+                  user_id: "user-uuid-001"
+                  platform: "linkedin"
+                  content: "Exciting news from our team!"
+                  image_url: null
+                  post_id: "li-post-456"
+                  status: "published"
+                  likes: 100
+                  comments: 25
+                  shares: 10
+                  views: 2000
+                  published_at: "2024-03-20T09:00:00Z"
+                  created_at: "2024-03-20T08:30:00Z"
+    post:
+      summary: Create a published post record
+      tags: [PublishedPosts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishedPostCreate'
+            example:
+              user_id: "user-uuid-001"
+              platform: "linkedin"
+              content: "Content to publish"
+              status: "published"
+              published_at: "2024-03-22T10:00:00Z"
+      responses:
+        '201':
+          description: Published post created
+
+  # ─────────────────────────────────────────
+  # SCHEDULED POSTS
+  # ─────────────────────────────────────────
+  /scheduled_posts:
+    get:
+      summary: List scheduled posts
+      tags: [ScheduledPosts]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of scheduled posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduledPost'
+              example:
+                - id: "schp-uuid-001"
+                  user_id: "user-uuid-001"
+                  platform: "twitter"
+                  content: "Scheduled tweet content"
+                  image_url: null
+                  publish_at: "2024-04-01T08:00:00Z"
+                  status: "pending"
+                  error_message: null
+                  post_id: null
+                  created_at: "2024-03-22T10:00:00Z"
+                  updated_at: "2024-03-22T10:00:00Z"
+    post:
+      summary: Schedule a post
+      tags: [ScheduledPosts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduledPostCreate'
+            example:
+              user_id: "user-uuid-001"
+              platform: "instagram"
+              content: "Post to be published later"
+              publish_at: "2024-04-05T12:00:00Z"
+              status: "pending"
+      responses:
+        '201':
+          description: Post scheduled
+
+  # ─────────────────────────────────────────
+  # GENERATED VIDEOS
+  # ─────────────────────────────────────────
+  /generated_videos:
+    get:
+      summary: List generated videos
+      tags: [GeneratedVideos]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of generated videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GeneratedVideo'
+              example:
+                - id: "gv-uuid-001"
+                  user_id: "user-uuid-001"
+                  niche: "fitness"
+                  video_id: "vid-ext-001"
+                  video_url: "https://example.com/video.mp4"
+                  script: "Welcome to today's workout..."
+                  duration: "00:02:30"
+                  created_at: "2024-03-18T11:00:00Z"
+                  updated_at: "2024-03-18T11:30:00Z"
+                  avatar_id: "avatar_002"
+                  duration_seconds: 150
+    post:
+      summary: Create a generated video record
+      tags: [GeneratedVideos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratedVideoCreate'
+            example:
+              user_id: "user-uuid-001"
+              niche: "marketing"
+              video_id: "vid-ext-002"
+              video_url: "https://example.com/new-video.mp4"
+              script: "Script content here"
+              avatar_id: "avatar_001"
+              duration_seconds: 90
+      responses:
+        '201':
+          description: Video record created
+
+  # ─────────────────────────────────────────
+  # LAUNCH VIDEOS
+  # ─────────────────────────────────────────
+  /launch_videos:
+    get:
+      summary: List launch videos
+      tags: [LaunchVideos]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of launch videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LaunchVideo'
+              example:
+                - id: "lv-uuid-001"
+                  user_id: "user-uuid-001"
+                  video_url: "https://cdn.example.com/launch.mp4"
+                  title: "Product Launch 2024"
+                  description: "Our biggest launch yet!"
+                  thumbnail_url: "https://cdn.example.com/thumb.jpg"
+                  status: "published"
+                  views: 5000
+                  created_at: "2024-03-01T09:00:00Z"
+                  updated_at: "2024-03-01T09:00:00Z"
+    post:
+      summary: Create a launch video
+      tags: [LaunchVideos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LaunchVideoCreate'
+            example:
+              user_id: "user-uuid-001"
+              video_url: "https://cdn.example.com/new-launch.mp4"
+              title: "Launch Video Title"
+              description: "Description of the launch"
+              status: "draft"
+      responses:
+        '201':
+          description: Launch video created
+
+  # ─────────────────────────────────────────
+  # REFERRALS
+  # ─────────────────────────────────────────
+  /referrals:
+    get:
+      summary: List referrals
+      tags: [Referrals]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of referrals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Referral'
+              example:
+                - id: "ref-uuid-001"
+                  referrer_user_id: "user-uuid-001"
+                  referred_user_id: "user-uuid-002"
+                  referral_code: "REF123"
+                  status: "completed"
+                  referrer_bonus: 10
+                  referred_bonus: 5
+                  created_at: "2024-02-10T08:00:00Z"
+                  completed_at: "2024-02-15T10:00:00Z"
+    post:
+      summary: Create a referral
+      tags: [Referrals]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferralCreate'
+            example:
+              referrer_user_id: "user-uuid-001"
+              referred_user_id: "user-uuid-003"
+              referral_code: "REF123"
+              status: "pending"
+      responses:
+        '201':
+          description: Referral created
+
+  # ─────────────────────────────────────────
+  # INVOICES
+  # ─────────────────────────────────────────
+  /invoices:
+    get:
+      summary: List invoices
+      tags: [Invoices]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+              example:
+                - id: "inv-uuid-001"
+                  user_id: "user-uuid-001"
+                  stripe_invoice_id: "in_1234567890"
+                  amount: 4999
+                  currency: "usd"
+                  status: "paid"
+                  paid_at: "2024-03-01T12:00:00Z"
+                  created_at: "2024-03-01T11:00:00Z"
+    post:
+      summary: Create an invoice record
+      tags: [Invoices]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceCreate'
+            example:
+              user_id: "user-uuid-001"
+              stripe_invoice_id: "in_0987654321"
+              amount: 9999
+              currency: "usd"
+              status: "open"
+      responses:
+        '201':
+          description: Invoice created
+
+  # ─────────────────────────────────────────
+  # USER SUBSCRIPTIONS
+  # ─────────────────────────────────────────
+  /user_subscriptions:
+    get:
+      summary: List user subscriptions
+      tags: [UserSubscriptions]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of user subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSubscription'
+              example:
+                - id: "us-uuid-001"
+                  user_id: "user-uuid-001"
+                  plan_type: "pro"
+                  stripe_customer_id: "cus_abc123"
+                  stripe_subscription_id: "sub_def456"
+                  status: "active"
+                  current_period_end: "2024-04-01T00:00:00Z"
+                  created_at: "2024-03-01T00:00:00Z"
+                  updated_at: "2024-03-01T00:00:00Z"
+    post:
+      summary: Create a user subscription
+      tags: [UserSubscriptions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSubscriptionCreate'
+            example:
+              user_id: "user-uuid-001"
+              plan_type: "pro"
+              stripe_customer_id: "cus_newcustomer"
+              stripe_subscription_id: "sub_newsubscription"
+              status: "active"
+              current_period_end: "2025-03-22T00:00:00Z"
+      responses:
+        '201':
+          description: Subscription created
+
+  # ─────────────────────────────────────────
+  # SUBSCRIPTION CANCELLATIONS
+  # ─────────────────────────────────────────
+  /subscription_cancellations:
+    get:
+      summary: List subscription cancellations
+      tags: [SubscriptionCancellations]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of cancellations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionCancellation'
+              example:
+                - id: "sc-uuid-001"
+                  user_id: "user-uuid-001"
+                  subscription_id: "sub_def456"
+                  plan_type: "pro"
+                  cancellation_reason: "Too expensive"
+                  cancellation_date: "2024-03-22T10:00:00Z"
+                  access_until: "2024-04-01T00:00:00Z"
+                  status: "cancelled"
+                  stripe_response: null
+                  created_at: "2024-03-22T10:00:00Z"
+    post:
+      summary: Record a subscription cancellation
+      tags: [SubscriptionCancellations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionCancellationCreate'
+            example:
+              user_id: "user-uuid-001"
+              subscription_id: "sub_def456"
+              plan_type: "pro"
+              cancellation_reason: "Found a better alternative"
+              status: "cancelled"
+      responses:
+        '201':
+          description: Cancellation recorded
+
+  # ─────────────────────────────────────────
+  # SUPPORT TICKETS
+  # ─────────────────────────────────────────
+  /support_tickets:
+    get:
+      summary: List support tickets
+      tags: [SupportTickets]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportTicket'
+              example:
+                - id: "st-uuid-001"
+                  user_id: "user-uuid-001"
+                  email: "user@example.com"
+                  name: "John Doe"
+                  subject: "Cannot access my account"
+                  message: "I am unable to log in since yesterday."
+                  status: "open"
+                  created_at: "2024-03-20T09:00:00Z"
+                  updated_at: "2024-03-20T09:00:00Z"
+                  chat_conversation: null
+                  source: "web"
+    post:
+      summary: Create a support ticket
+      tags: [SupportTickets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportTicketCreate'
+            example:
+              user_id: "user-uuid-001"
+              email: "user@example.com"
+              name: "Jane Smith"
+              subject: "Billing question"
+              message: "I was charged twice this month."
+              source: "email"
+      responses:
+        '201':
+          description: Ticket created
+
+  # ─────────────────────────────────────────
+  # VIDEO WAITLIST
+  # ─────────────────────────────────────────
+  /video_waitlist:
+    get:
+      summary: List video waitlist entries
+      tags: [VideoWaitlist]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of waitlist entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoWaitlist'
+              example:
+                - id: "vw-uuid-001"
+                  user_id: "user-uuid-001"
+                  email: "waitlist@example.com"
+                  plan_type: "pro"
+                  status: "waiting"
+                  created_at: "2024-03-10T08:00:00Z"
+    post:
+      summary: Add to video waitlist
+      tags: [VideoWaitlist]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoWaitlistCreate'
+            example:
+              user_id: "user-uuid-002"
+              email: "newuser@example.com"
+              plan_type: "free"
+              status: "waiting"
+      responses:
+        '201':
+          description: Added to waitlist
+
+  # ─────────────────────────────────────────
+  # CHECKOUT SESSIONS
+  # ─────────────────────────────────────────
+  /checkout_sessions:
+    get:
+      summary: List checkout sessions
+      tags: [CheckoutSessions]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of checkout sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CheckoutSession'
+              example:
+                - id: "cs-uuid-001"
+                  user_id: "user-uuid-001"
+                  session_id: "cs_stripe_abc123"
+                  price_id: "price_monthly_pro"
+                  plan_type: "pro"
+                  status: "complete"
+                  created_at: "2024-03-01T10:00:00Z"
+    post:
+      summary: Create a checkout session record
+      tags: [CheckoutSessions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutSessionCreate'
+            example:
+              user_id: "user-uuid-001"
+              session_id: "cs_stripe_xyz789"
+              price_id: "price_annual_pro"
+              plan_type: "pro"
+              status: "open"
+      responses:
+        '201':
+          description: Checkout session created
+
+  # ─────────────────────────────────────────
+  # LEADS PLANO PLUS
+  # ─────────────────────────────────────────
+  /leads_plano_plus:
+    get:
+      summary: List leads for plano plus
+      tags: [LeadsPlanPlus]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of leads
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeadPlanPlus'
+              example:
+                - id: "lead-uuid-001"
+                  email: "lead@example.com"
+                  user_id: "user-uuid-005"
+                  plan_type: "plus"
+                  discount_code: "LAUNCH50"
+                  status: "interested"
+                  created_at: "2024-03-05T08:00:00Z"
+                  updated_at: "2024-03-05T08:00:00Z"
+    post:
+      summary: Create a lead for plano plus
+      tags: [LeadsPlanPlus]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadPlanPlusCreate'
+            example:
+              email: "newlead@example.com"
+              plan_type: "plus"
+              discount_code: "EARLYBIRD"
+              status: "interested"
+      responses:
+        '201':
+          description: Lead created
+
+  # ─────────────────────────────────────────
+  # INTEGRATION TOKENS
+  # ─────────────────────────────────────────
+  /integration_tokens:
+    get:
+      summary: List integration tokens
+      tags: [IntegrationTokens]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of integration tokens
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IntegrationToken'
+              example:
+                - id: "it-uuid-001"
+                  user_id: "user-uuid-001"
+                  provider: "instagram"
+                  access_token: "EAABwzLixnjYBO..."
+                  refresh_token: null
+                  expires_at: "2024-06-01T00:00:00Z"
+                  created_at: "2024-03-01T00:00:00Z"
+                  updated_at: "2024-03-01T00:00:00Z"
+    post:
+      summary: Store an integration token
+      tags: [IntegrationTokens]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationTokenCreate'
+            example:
+              user_id: "user-uuid-001"
+              provider: "linkedin"
+              access_token: "AQV..."
+              expires_at: "2024-09-01T00:00:00Z"
+      responses:
+        '201':
+          description: Token stored
+
+  # ─────────────────────────────────────────
+  # API KEYS
+  # ─────────────────────────────────────────
+  /api_keys:
+    get:
+      summary: List API keys
+      tags: [ApiKeys]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'
+              example:
+                - id: "ak-uuid-001"
+                  owner_user_id: "user-uuid-001"
+                  key_hash: "sha256-hash-value"
+                  key_prefix: "sk_live_"
+                  name: "Production Key"
+                  allowed_origins: ["https://myapp.com"]
+                  plan: "pro"
+                  monthly_char_limit: 1000000
+                  is_active: true
+                  created_at: "2024-01-01T00:00:00Z"
+                  last_used_at: "2024-03-22T08:00:00Z"
+                  expires_at: null
+    post:
+      summary: Create an API key
+      tags: [ApiKeys]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreate'
+            example:
+              owner_user_id: "user-uuid-001"
+              key_hash: "new-sha256-hash"
+              key_prefix: "sk_live_"
+              name: "My New Key"
+              plan: "pro"
+              monthly_char_limit: 500000
+              is_active: true
+      responses:
+        '201':
+          description: API key created
+
+  # ─────────────────────────────────────────
+  # API USAGE LOGS
+  # ─────────────────────────────────────────
+  /api_usage_logs:
+    get:
+      summary: List API usage logs
+      tags: [ApiUsageLogs]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of API usage logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiUsageLog'
+              example:
+                - id: "log-uuid-001"
+                  api_key_id: "ak-uuid-001"
+                  owner_user_id: "user-uuid-001"
+                  endpoint: "/v1/chat"
+                  model: "claude-3"
+                  chars_input: 1200
+                  chars_output: 850
+                  status: 200
+                  latency_ms: 1340
+                  ip_address: "192.168.1.1"
+                  user_agent: "Mozilla/5.0"
+                  in_abuse: false
+                  created_at: "2024-03-22T09:00:00Z"
+    post:
+      summary: Create an API usage log entry
+      tags: [ApiUsageLogs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUsageLogCreate'
+            example:
+              api_key_id: "ak-uuid-001"
+              owner_user_id: "user-uuid-001"
+              endpoint: "/v1/generate"
+              model: "gpt-4"
+              chars_input: 500
+              chars_output: 300
+              status: 200
+              latency_ms: 980
+      responses:
+        '201':
+          description: Log created
+
+  # ─────────────────────────────────────────
+  # API MONTHLY USAGE
+  # ─────────────────────────────────────────
+  /api_monthly_usage:
+    get:
+      summary: List monthly API usage
+      tags: [ApiMonthlyUsage]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of monthly usage records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiMonthlyUsage'
+              example:
+                - id: "amu-uuid-001"
+                  owner_user_id: "user-uuid-001"
+                  api_key_id: "ak-uuid-001"
+                  year_month: "2024-03"
+                  total_chars: 150000
+                  total_calls: 320
+                  updated_at: "2024-03-22T23:59:00Z"
+    post:
+      summary: Create a monthly usage record
+      tags: [ApiMonthlyUsage]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiMonthlyUsageCreate'
+            example:
+              owner_user_id: "user-uuid-001"
+              api_key_id: "ak-uuid-001"
+              year_month: "2024-04"
+              total_chars: 0
+              total_calls: 0
+      responses:
+        '201':
+          description: Monthly usage record created
+
+  # ─────────────────────────────────────────
+  # WHATSAPP CAMPAIGNS
+  # ─────────────────────────────────────────
+  /whatsapp_campaigns:
+    get:
+      summary: List WhatsApp campaigns
+      tags: [WhatsappCampaigns]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of WhatsApp campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WhatsappCampaign'
+              example:
+                - id: "wc-uuid-001"
+                  user_id: "user-uuid-001"
+                  title: "March Promo"
+                  message_template: "Hello {{name}}, check out our new offer!"
+                  recipient_list: ["5511999990000", "5521888880000"]
+                  scheduled_date: "2024-04-01T10:00:00Z"
+                  status: "scheduled"
+                  delivery_status: "pending"
+                  created_at: "2024-03-20T08:00:00Z"
+                  updated_at: "2024-03-20T08:00:00Z"
+    post:
+      summary: Create a WhatsApp campaign
+      tags: [WhatsappCampaigns]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsappCampaignCreate'
+            example:
+              user_id: "user-uuid-001"
+              title: "April Campaign"
+              message_template: "Hi {{name}}, your offer awaits!"
+              recipient_list: ["5511999991111"]
+              scheduled_date: "2024-04-10T09:00:00Z"
+              status: "draft"
+      responses:
+        '201':
+          description: Campaign created
+
+  # ─────────────────────────────────────────
+  # INSTAGRAM CAMPAIGNS
+  # ─────────────────────────────────────────
+  /instagram_campaigns:
+    get:
+      summary: List Instagram campaigns
+      tags: [InstagramCampaigns]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of Instagram campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstagramCampaign'
+              example:
+                - id: "ic-uuid-001"
+                  user_id: "user-uuid-001"
+                  title: "Spring Sale"
+                  content: "Don't miss our Spring Sale!"
+                  caption: "Big deals await 🌸 #SpringSale"
+                  hashtags: "#SpringSale #Deals #Fashion"
+                  scheduled_date: "2024-04-05T12:00:00Z"
+                  status: "scheduled"
+                  likes: 0
+                  comments: 0
+                  shares: 0
+                  created_at: "2024-03-22T10:00:00Z"
+    post:
+      summary: Create an Instagram campaign
+      tags: [InstagramCampaigns]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstagramCampaignCreate'
+            example:
+              user_id: "user-uuid-001"
+              title: "New Collection Drop"
+              content: "Our new collection is here!"
+              caption: "Fresh styles just dropped 🔥"
+              hashtags: "#NewCollection #Style"
+              scheduled_date: "2024-04-15T15:00:00Z"
+              status: "draft"
+      responses:
+        '201':
+          description: Instagram campaign created
+
+  # ─────────────────────────────────────────
+  # WEBHOOK LOGS
+  # ─────────────────────────────────────────
+  /webhook_logs:
+    get:
+      summary: List webhook logs
+      tags: [WebhookLogs]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of webhook logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookLog'
+              example:
+                - id: "wl-uuid-001"
+                  event_type: "payment.succeeded"
+                  event_id: "evt_stripe_123"
+                  status: "processed"
+                  payload: {"amount": 4999, "currency": "usd"}
+                  error_message: null
+                  created_at: "2024-03-01T12:00:00Z"
+                  processed_at: "2024-03-01T12:00:05Z"
+    post:
+      summary: Create a webhook log entry
+      tags: [WebhookLogs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookLogCreate'
+            example:
+              event_type: "subscription.cancelled"
+              event_id: "evt_stripe_456"
+              status: "received"
+              payload: {"subscription_id": "sub_abc"}
+      responses:
+        '201':
+          description: Webhook log created
+
+  # ─────────────────────────────────────────
+  # CANVA DESIGNS
+  # ─────────────────────────────────────────
+  /canva_designs:
+    get:
+      summary: List Canva designs
+      tags: [CanvaDesigns]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of Canva designs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanvaDesign'
+              example:
+                - id: "cd-uuid-001"
+                  user_id: "user-uuid-001"
+                  design_id: "canva-design-abc"
+                  export_url: "https://export.canva.com/design-abc.png"
+                  created_at: "2024-03-15T11:00:00Z"
+    post:
+      summary: Store a Canva design reference
+      tags: [CanvaDesigns]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvaDesignCreate'
+            example:
+              user_id: "user-uuid-001"
+              design_id: "canva-design-xyz"
+              export_url: "https://export.canva.com/design-xyz.jpg"
+      responses:
+        '201':
+          description: Design reference stored
+
+  # ─────────────────────────────────────────
+  # CANVA OAUTH SESSIONS
+  # ─────────────────────────────────────────
+  /canva_oauth_sessions:
+    get:
+      summary: List Canva OAuth sessions
+      tags: [CanvaOauthSessions]
+      parameters:
+        - $ref: '#/components/parameters/Select'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of Canva OAuth sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanvaOauthSession'
+              example:
+                - id: "cos-uuid-001"
+                  user_id: "user-uuid-001"
+                  code_verifier: "pkce-verifier-string"
+                  state: "random-state-string"
+                  created_at: "2024-03-22T10:00:00Z"
+                  expires_at: "2024-03-22T10:10:00Z"
+    post:
+      summary: Create a Canva OAuth session
+      tags: [CanvaOauthSessions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvaOauthSessionCreate'
+            example:
+              user_id: "user-uuid-001"
+              code_verifier: "new-pkce-verifier"
+              state: "new-random-state"
+              expires_at: "2024-03-22T11:00:00Z"
+      responses:
+        '201':
+          description: OAuth session created
+
+# ─────────────────────────────────────────────────────────────
+# COMPONENTS
+# ─────────────────────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  parameters:
+    Select:
+      name: select
+      in: query
+      description: "Columns to return (e.g. `id,email,created_at`)"
+      schema:
+        type: string
+    Order:
+      name: order
+      in: query
+      description: "Order results (e.g. `created_at.desc`)"
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      description: Maximum number of rows to return
+      schema:
+        type: integer
+        default: 20
+    Offset:
+      name: offset
+      in: query
+      description: Row offset for pagination
+      schema:
+        type: integer
+        default: 0
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          example:
+            message: "JWT expired"
+            hint: "Provide a valid Bearer token or apikey"
+    BadRequest:
+      description: Bad request / validation error
+      content:
+        application/json:
+          example:
+            code: "23502"
+            message: "null value in column violates not-null constraint"
+
+  schemas:
+
+    # ── PROFILE ──
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        plan_type:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        free_messages_used:
+          type: integer
+        subscription_plan:
+          type: string
+        is_superadmin:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        referral_code:
+          type: string
+        extra_messages_balance:
+          type: integer
+        referred_by:
+          type: string
+          nullable: true
+        subscription_status:
+          type: string
+        cancellation_date:
+          type: string
+          format: date-time
+          nullable: true
+        access_until:
+          type: string
+          format: date-time
+          nullable: true
+        user_type:
+          type: string
+        niche:
+          type: string
+        plan:
+          type: string
+        monthly_videos_generated:
+          type: integer
+        monthly_videos_remaining:
+          type: integer
+        selected_avatar_id:
+          type: string
+          nullable: true
+        referral_count:
+          type: integer
+        bonus_messages:
+          type: integer
+        meta_connected_at:
+          type: string
+          format: date-time
+          nullable: true
+        linkedin_name:
+          type: string
+          nullable: true
+        linkedin_email:
+          type: string
+          nullable: true
+        content_profiles:
+          type: object
+          nullable: true
+        active_content_profile:
+          type: string
+          nullable: true
+        subscription_tier:
+          type: string
+        daily_message_reset:
+          type: string
+          format: date-time
+          nullable: true
+        last_message_reset:
+          type: string
+          format: date-time
+          nullable: true
+        most_used_feature:
+          type: string
+          nullable: true
+        professional_niche:
+          type: string
+          nullable: true
+        meta_access_token:
+          type: string
+          nullable: true
+        instagram_username:
+          type: string
+          nullable: true
+        meta_token_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        whatsapp_business_phone:
+          type: string
+          nullable: true
+        meta_connection_status:
+          type: string
+        has_seen_onboarding:
+          type: boolean
+        subscription_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_premium:
+          type: boolean
+        premium_granted_at:
+          type: string
+          format: date-time
+          nullable: true
+        linkedin_access_token:
+          type: string
+          nullable: true
+        linkedin_user_id:
+          type: string
+          nullable: true
+        linkedin_connected_at:
+          type: string
+          format: date-time
+          nullable: true
+    ProfileCreate:
+      type: object
+      required: [user_id, email]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        plan_type:
+          type: string
+        role:
+          type: string
+        niche:
+          type: string
+        plan:
+          type: string
+
+    # ── CHAT ──
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+          format: uuid
+        model_type:
+          type: string
+        is_pinned:
+          type: boolean
+    ChatCreate:
+      type: object
+      required: [user_id]
+      properties:
+        title:
+          type: string
+        user_id:
+          type: string
+          format: uuid
+        model_type:
+          type: string
+        is_pinned:
+          type: boolean
+
+    # ── MESSAGE ──
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        chat_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [user, assistant, system]
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+          format: uuid
+        model_type:
+          type: string
+        conversation_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_url:
+          type: string
+          nullable: true
+        file_type:
+          type: string
+          nullable: true
+        file_name:
+          type: string
+          nullable: true
+        analysis_result:
+          type: string
+          nullable: true
+        analysis_model:
+          type: string
+          nullable: true
+        feature_type:
+          type: string
+    MessageCreate:
+      type: object
+      required: [chat_id, role, content, user_id]
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+        content:
+          type: string
+        user_id:
+          type: string
+          format: uuid
+        model_type:
+          type: string
+        feature_type:
+          type: string
+
+    # ── CONVERSATION ──
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        is_pinned:
+          type: boolean
+    ConversationCreate:
+      type: object
+      required: [user_id]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        is_pinned:
+          type: boolean
+
+    # ── POST ──
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        platform:
+          type: string
+        views:
+          type: integer
+        likes:
+          type: integer
+        engagement:
+          type: integer
+        shares:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PostCreate:
+      type: object
+      required: [user_id, content]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        platform:
+          type: string
+
+    # ── SOCIAL POST ──
+    SocialPost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+        status:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        likes:
+          type: integer
+        engagement:
+          type: integer
+        shares:
+          type: integer
+    SocialPostCreate:
+      type: object
+      required: [user_id, platform, content]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+        status:
+          type: string
+
+    # ── PUBLISHED POST ──
+    PublishedPost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+        post_id:
+          type: string
+          nullable: true
+        status:
+          type: string
+        likes:
+          type: integer
+        comments:
+          type: integer
+        shares:
+          type: integer
+        views:
+          type: integer
+        published_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    PublishedPostCreate:
+      type: object
+      required: [user_id, platform, content]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        content:
+          type: string
+        status:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+
+    # ── SCHEDULED POST ──
+    ScheduledPost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+        publish_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+        error_message:
+          type: string
+          nullable: true
+        post_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ScheduledPostCreate:
+      type: object
+      required: [user_id, platform, content, publish_at]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+        publish_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+
+    # ── GENERATED VIDEO ──
+    GeneratedVideo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        niche:
+          type: string
+        video_id:
+          type: string
+        video_url:
+          type: string
+        script:
+          type: string
+        duration:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        avatar_id:
+          type: string
+        duration_seconds:
+          type: integer
+    GeneratedVideoCreate:
+      type: object
+      required: [user_id, video_url]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        niche:
+          type: string
+        video_id:
+          type: string
+        video_url:
+          type: string
+        script:
+          type: string
+        avatar_id:
+          type: string
+        duration_seconds:
+          type: integer
+
+    # ── LAUNCH VIDEO ──
+    LaunchVideo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        video_url:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        thumbnail_url:
+          type: string
+        status:
+          type: string
+        views:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    LaunchVideoCreate:
+      type: object
+      required: [user_id, video_url, title]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        video_url:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        thumbnail_url:
+          type: string
+        status:
+          type: string
+
+    # ── REFERRAL ──
+    Referral:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        referrer_user_id:
+          type: string
+          format: uuid
+        referred_user_id:
+          type: string
+          format: uuid
+        referral_code:
+          type: string
+        status:
+          type: string
+        referrer_bonus:
+          type: integer
+        referred_bonus:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+    ReferralCreate:
+      type: object
+      required: [referrer_user_id, referral_code]
+      properties:
+        referrer_user_id:
+          type: string
+          format: uuid
+        referred_user_id:
+          type: string
+          format: uuid
+        referral_code:
+          type: string
+        status:
+          type: string
+
+    # ── INVOICE ──
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        stripe_invoice_id:
+          type: string
+        amount:
+          type: integer
+          description: Amount in cents
+        currency:
+          type: string
+        status:
+          type: string
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    InvoiceCreate:
+      type: object
+      required: [user_id, stripe_invoice_id, amount, currency]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        stripe_invoice_id:
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+        status:
+          type: string
+
+    # ── USER SUBSCRIPTION ──
+    UserSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        plan_type:
+          type: string
+        stripe_customer_id:
+          type: string
+        stripe_subscription_id:
+          type: string
+        status:
+          type: string
+        current_period_end:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    UserSubscriptionCreate:
+      type: object
+      required: [user_id, plan_type, stripe_customer_id, stripe_subscription_id]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        plan_type:
+          type: string
+        stripe_customer_id:
+          type: string
+        stripe_subscription_id:
+          type: string
+        status:
+          type: string
+        current_period_end:
+          type: string
+          format: date-time
+
+    # ── SUBSCRIPTION CANCELLATION ──
+    SubscriptionCancellation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        subscription_id:
+          type: string
+        plan_type:
+          type: string
+        cancellation_reason:
+          type: string
+        cancellation_date:
+          type: string
+          format: date-time
+        access_until:
+          type: string
+          format: date-time
+        status:
+          type: string
+        stripe_response:
+          type: object
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    SubscriptionCancellationCreate:
+      type: object
+      required: [user_id, subscription_id]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        subscription_id:
+          type: string
+        plan_type:
+          type: string
+        cancellation_reason:
+          type: string
+        status:
+          type: string
+
+    # ── SUPPORT TICKET ──
+    SupportTicket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        chat_conversation:
+          type: object
+          nullable: true
+        source:
+          type: string
+    SupportTicketCreate:
+      type: object
+      required: [email, subject, message]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        source:
+          type: string
+
+    # ── VIDEO WAITLIST ──
+    VideoWaitlist:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        plan_type:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    VideoWaitlistCreate:
+      type: object
+      required: [email]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        plan_type:
+          type: string
+        status:
+          type: string
+
+    # ── CHECKOUT SESSION ──
+    CheckoutSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+        price_id:
+          type: string
+        plan_type:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CheckoutSessionCreate:
+      type: object
+      required: [user_id, session_id, price_id]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+        price_id:
+          type: string
+        plan_type:
+          type: string
+        status:
+          type: string
+
+    # ── LEAD PLAN PLUS ──
+    LeadPlanPlus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+        plan_type:
+          type: string
+        discount_code:
+          type: string
+          nullable: true
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    LeadPlanPlusCreate:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+        plan_type:
+          type: string
+        discount_code:
+          type: string
+        status:
+          type: string
+
+    # ── INTEGRATION TOKEN ──
+    IntegrationToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    IntegrationTokenCreate:
+      type: object
+      required: [user_id, provider, access_token]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+
+    # ── API KEY ──
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        key_hash:
+          type: string
+        key_prefix:
+          type: string
+        name:
+          type: string
+        allowed_origins:
+          type: array
+          items:
+            type: string
+        plan:
+          type: string
+        monthly_char_limit:
+          type: integer
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        last_used_at:
+          type: string
+          format: date-time
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+    ApiKeyCreate:
+      type: object
+      required: [owner_user_id, key_hash, key_prefix, name]
+      properties:
+        owner_user_id:
+          type: string
+          format: uuid
+        key_hash:
+          type: string
+        key_prefix:
+          type: string
+        name:
+          type: string
+        plan:
+          type: string
+        monthly_char_limit:
+          type: integer
+        is_active:
+          type: boolean
+
+    # ── API USAGE LOG ──
+    ApiUsageLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        api_key_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        endpoint:
+          type: string
+        model:
+          type: string
+        chars_input:
+          type: integer
+        chars_output:
+          type: integer
+        status:
+          type: integer
+        latency_ms:
+          type: integer
+        ip_address:
+          type: string
+        user_agent:
+          type: string
+        in_abuse:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    ApiUsageLogCreate:
+      type: object
+      required: [api_key_id, owner_user_id, endpoint]
+      properties:
+        api_key_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        endpoint:
+          type: string
+        model:
+          type: string
+        chars_input:
+          type: integer
+        chars_output:
+          type: integer
+        status:
+          type: integer
+        latency_ms:
+          type: integer
+
+    # ── API MONTHLY USAGE ──
+    ApiMonthlyUsage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        api_key_id:
+          type: string
+          format: uuid
+        year_month:
+          type: string
+          example: "2024-03"
+        total_chars:
+          type: integer
+        total_calls:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+    ApiMonthlyUsageCreate:
+      type: object
+      required: [owner_user_id, api_key_id, year_month]
+      properties:
+        owner_user_id:
+          type: string
+          format: uuid
+        api_key_id:
+          type: string
+          format: uuid
+        year_month:
+          type: string
+        total_chars:
+          type: integer
+        total_calls:
+          type: integer
+
+    # ── WHATSAPP CAMPAIGN ──
+    WhatsappCampaign:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        message_template:
+          type: string
+        recipient_list:
+          type: array
+          items:
+            type: string
+        scheduled_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+        delivery_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    WhatsappCampaignCreate:
+      type: object
+      required: [user_id, title, message_template]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        message_template:
+          type: string
+        recipient_list:
+          type: array
+          items:
+            type: string
+        scheduled_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+
+    # ── INSTAGRAM CAMPAIGN ──
+    InstagramCampaign:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        caption:
+          type: string
+        hashtags:
+          type: string
+        scheduled_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+        likes:
+          type: integer
+        comments:
+          type: integer
+        shares:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    InstagramCampaignCreate:
+      type: object
+      required: [user_id, title, content]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        caption:
+          type: string
+        hashtags:
+          type: string
+        scheduled_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+
+    # ── WEBHOOK LOG ──
+    WebhookLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        event_id:
+          type: string
+        status:
+          type: string
+        payload:
+          type: object
+        error_message:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+    WebhookLogCreate:
+      type: object
+      required: [event_type, event_id]
+      properties:
+        event_type:
+          type: string
+        event_id:
+          type: string
+        status:
+          type: string
+        payload:
+          type: object
+
+    # ── CANVA DESIGN ──
+    CanvaDesign:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        design_id:
+          type: string
+        export_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CanvaDesignCreate:
+      type: object
+      required: [user_id, design_id]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        design_id:
+          type: string
+        export_url:
+          type: string
+
+    # ── CANVA OAUTH SESSION ──
+    CanvaOauthSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        code_verifier:
+          type: string
+        state:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+    CanvaOauthSessionCreate:
+      type: object
+      required: [user_id, code_verifier, state]
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        code_verifier:
+          type: string
+        state:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
