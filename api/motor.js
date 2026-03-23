@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   try {
     // 3. O Agregly pede um roteiro para a IA (Usando o Gemini 2.0 Flash Lite Free)
     const completion = await openai.chat.completions.create({
-      model: "google/gemini-2.0-flash-lite-001:free", 
+      model: "model: "google/gemini-2.0-flash-001-Lite-free", 
       messages: [
         { 
           role: "system", 
