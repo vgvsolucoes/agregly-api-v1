@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
     // Teste ultra-simples: apenas listar as tabelas ou tentar ler uma linha
     // IMPORTANTE: Verifique se o nome da tabela no Supabase é 'Videos' ou 'videos'
-    const { data, error } = await supabase.from('Videos').select('*').limit(1)
+    const { data, error } = await supabase.from('generated_videos').select('*').limit(1)
 
     if (error) {
       return res.status(400).json({ error: "Erro no Supabase: " + error.message })
