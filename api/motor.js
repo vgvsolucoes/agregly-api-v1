@@ -1,34 +1,27 @@
 import { createClient } from '@supabase/supabase-js'
 
 export default async function handler(req, res) {
-  // A Vercel vai usar as chaves que você salvou no Dashboard automaticamente
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  )
-
   try {
-    // Vamos tentar ler a tabela 'Videos' que você desenhou no Swagger
-    // Se a tabela ainda estiver vazia, ele retornará um array vazio [], o que é um sucesso!
-    const { data, error } = await supabase
-      .from('Videos') 
-      .select('*')
-      .limit(5)
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
-    if (error) throw error
+    // Teste ultra-simples: apenas listar as tabelas ou tentar ler uma linha
+    // IMPORTANTE: Verifique se o nome da tabela no Supabase é 'Videos' ou 'videos'
+    const { data, error } = await supabase.from('Videos').select('*').limit(1)
 
-    return res.status(200).json({
-      status: "🚀 Agregly Engine Online",
-      mensagem: "Conexão entre Vercel e Supabase estabelecida com sucesso!",
-      ambiente: "Produção",
-      dados_encontrados: data
+    if (error) {
+      return res.status(400).json({ error: "Erro no Supabase: " + error.message })
+    }
+
+    return res.status(200).json({ 
+      status: "Online", 
+      mensagem: "Conexão estabelecida!",
+      dados: data 
     })
 
-  } catch (error) {
-    return res.status(500).json({
-      status: "Erro na Engenharia",
-      mensagem: "O motor não conseguiu aceder ao banco de dados.",
-      detalhes: error.message
-    })
+  } catch (err) {
+    return res.status(500).json({ error: "Erro Interno: " + err.message })
   }
 }
