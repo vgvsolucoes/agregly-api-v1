@@ -13,32 +13,30 @@ export default async function handler(req, res) {
     const completion = await openai.chat.completions.create({
       model: "meta-llama/llama-3.2-3b-instruct:free",
       messages: [
-        { role: "system", content: "Você é um roteirista de vídeos imobiliários." },
-        { role: "user", content: "Crie um roteiro de 15 segundos para um apartamento em SP." }
+        { role: "system", content: "Você é o roteirista mestre do Agregly." },
+        { role: "user", content: "Crie um roteiro de 15 segundos para um imóvel de luxo." }
       ],
     })
 
-    const roteiroGerado = completion.choices[0].message.content
+    const roteiro = completion.choices[0].message.content
 
     const { data, error } = await supabase
       .from('generated_videos')
-      .insert([
-        { 
-          video_url: "processando", 
-          status: "completed", 
-          metadata: { roteiro: roteiroGerado } 
-        }
-      ])
+      .insert([{ 
+        video_url: "pendente", 
+        status: "completed", 
+        metadata: { roteiro_gerado: roteiro } 
+      }])
       .select()
 
     if (error) throw error
 
     return res.status(200).json({
       status: "🚀 Motor Online!",
-      roteiro: roteiroGerado
+      roteiro_ia: roteiro
     })
 
   } catch (err) {
-    return res.status(500).json({ error: err.message })
+    return res.status(500).json({ error: "Erro no Motor: " + err.message })
   }
 }
