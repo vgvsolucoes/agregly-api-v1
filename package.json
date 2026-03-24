@@ -1,5 +1,6 @@
 {
   "name": "agregly-api-v1",
+  "type": "module",
   "version": "1.0.0",
   "description": "r# 🚀 Agregly API | Infraestrutura de IA Generativa",
   "main": "index.js",
